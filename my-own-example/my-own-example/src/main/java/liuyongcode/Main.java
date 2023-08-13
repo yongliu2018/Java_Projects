@@ -2,10 +2,13 @@ package liuyongcode;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @SpringBootApplication //turn this class into a spring boot application
@@ -26,8 +29,13 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/all-users")
     public List<UserAccount> getUser() {return userRepository.findAll(); }
+    @GetMapping("/all-books")
+    public List<Book> getBook(){
+        return bookRepository.findAll();
+    }
+
     record NewUserRequest(
             String Username,
             String Password,
@@ -37,11 +45,6 @@ public class Main {
             String lastName,
             ArrayList<Integer> booksBorrowed
     ){}
-
-    @GetMapping("/books")
-    public List<Book> getBook(){
-        return bookRepository.findAll();
-    }
     record NewBookRequest(
             String Title,
             String Publisher,
@@ -65,7 +68,7 @@ public class Main {
     }
 
     @PostMapping("/add-book")
-    public void addUser(@RequestBody NewBookRequest request){
+    public void addBook(@RequestBody NewBookRequest request){
         Book book = new Book();
         book.setTitle(request.Title());
         book.setPublisher(request.Publisher());
@@ -77,4 +80,15 @@ public class Main {
         bookRepository.save(book);
     }
 
+    @DeleteMapping("/del-book/{bookId}")
+    public ResponseEntity<Void> deleteByBookId(@PathVariable Integer bookId){
+        bookRepository.deleteById(bookId);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/del-user/{userId}")
+    public ResponseEntity<Void> deleteByUserId(@PathVariable Integer userId){
+        userRepository.deleteById(userId);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }
