@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5332/library
+    username: liuyongcode
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  main:
+    web-application-type: servlet #default is servlet
+
+    #is set type to none, no web server will be hosted.
+    #org.hibernate maps java class to database table
+    # dialect allows org.
+    # ddl-auto: create-drop resets db everytime app is ran.
